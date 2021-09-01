@@ -4,6 +4,6 @@ A simple tic-tac-toe game done in Python. This project started as a simple comma
 
 Goals for the project:
 
-Create a visual game with Pygame and implement the current logic.
-Create a 'hard' single player mode that utilizes a minmax algorithm. Currently there is an 'easy' single player mode that randomly generates legal move, though it is very bad at winning. Hope to create a chess game soon, which is the main motivation for this project.
-Learn about and create an automated testing module.
+- Create a visual game with Pygame and implement the current logic.
+-  Create a 'hard' single player mode that utilizes a minmax algorithm. Currently there is an 'easy' single player mode that randomly generates legal move, though it is very bad at winning. Hope to create a chess game soon, which is the main motivation for this project.
+-  Learn about and create an automated testing module.
