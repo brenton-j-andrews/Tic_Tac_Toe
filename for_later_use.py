@@ -279,8 +279,6 @@ while game_running:
     screen.fill((255, 255, 255))
     screen.blit(board_img, (0, 0))
 
-
-
     # Render player and quit buttons.
     if 610 <= mouse[0] <= 690 and 10 <= mouse[1] <= 90:
         p.draw.rect(screen, dark_color, [610, 10, 80, 80])

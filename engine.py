@@ -4,6 +4,8 @@ turn it is. It will also check if winning conditions are present after each turn
 provide a random move generator for single player testing / 'EASY' Mode.
 """
 
+import random
+
 
 class GameState:
     def __init__(self):
@@ -15,14 +17,6 @@ class GameState:
             [" ", " ", " "]
         ]
         self.x_to_play = True
-        self.is_won = False
-
-    # Function that checks move legality.
-    def legal(self, move):
-        if self.board[move[0]][move[1]] != ' ':
-            return False
-        else:
-            return True
 
     # Function checks the current game state for winning conditions.
     def check_win(self, symbol):
@@ -31,20 +25,34 @@ class GameState:
         for i in range(3):
             if self.board[i][col_count] == self.board[i][col_count + 1] == self.board[i][col_count + 2] == symbol:
                 print(f"\n{symbol} Wins! Congratulations!")
-                self.is_won = True
+                return True
 
         # Check rows.
         row_count = 0
         for j in range(3):
             if self.board[row_count][j] == self.board[row_count + 1][j] == self.board[row_count + 2][j] == symbol:
                 print(f"\n{symbol} Wins! Congratulations!")
-                self.is_won = True
+                return True
 
         # Check diagonal / anti-diagonal.
         if self.board[0][0] == self.board[1][1] == self.board[2][2] == symbol or self.board[2][0] == \
                 self.board[1][1] == self.board[0][2] == symbol:
             print(f"\n{symbol} Wins! Congratulations!")
-            self.is_won = True
+            return True
 
         return False
+
+    # Function that checks move legality.
+    def legal(self, move):
+        if self.board[move[0]][move[1]] != ' ':
+            return False
+        else:
+            return True
+
+    def rand_move(self):
+        legal_move = False
+        while not legal_move:
+            comp_move = [random.randint(0, 2), random.randint(0, 2)]
+            if self.legal(comp_move):
+                return comp_move
 
