@@ -1,7 +1,7 @@
 """
 This class stores all information concerning the current game state, such as the board layout and whose
 turn it is. It will also check if winning conditions are present after each turn, check move legality and
-provide a random move generator.
+provide a random move generator for single player testing / 'EASY' Mode.
 """
 
 

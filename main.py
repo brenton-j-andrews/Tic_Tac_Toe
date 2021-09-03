@@ -1,15 +1,17 @@
 """
-The main() file will be our program driver.
+The main file will be our program driver.
 It will handle user / computer input and update command line output / pygame graphics.
 """
+
+# This comment is a test... Learning about git branches / merging and whatnaught!
 
 import pygame as p
 import engine
 
-# Pygame engine init.
+# Initialize PyGame engine.
 p.init()
 
-# Board Dimension Variables.
+# Board Dimension / Info Variables.
 GAME_WIDTH = GAME_HEIGHT = 600
 DIMENSION = 3  # 3 x 3 squares in tic tac toe.
 SQ_SIZE = GAME_HEIGHT / DIMENSION
@@ -18,9 +20,10 @@ SQ_LOC = [((240, 240, 240), 0, 0), ((200, 200, 200), 200, 0), ((240, 240, 240), 
           ((200, 200, 200), 0, 200), ((240, 240, 240), 200, 200), ((200, 200, 200), 400, 200),
           ((240, 240, 240), 0, 400), ((200, 200, 200), 200, 400), ((240, 240, 240), 400, 400)]
 
+# Location tuples for 'X' and 'O' placement on the board.
 PIECE_LOC = [
     [(100, 100), (300, 100), (500, 100)],
-    [(100, 300), (300, 300), (500, 200)],
+    [(100, 300), (300, 300), (500, 300)],
     [(100, 500), (300, 500), (500, 500)]]
 
 
@@ -68,7 +71,7 @@ def draw_game_state(screen, game_state):
                 screen.blit(o_select, PIECE_LOC[i][j])
 
 
-# Function that takes user input and modifies, modifies the game_state and calls winning condition function.
+# Function that takes user input, checks move legality, modifies the game_state and checks for winning conditions.
 def game_state_mod(mouse, game_state):
 
     # Check game_state object for player turn.
