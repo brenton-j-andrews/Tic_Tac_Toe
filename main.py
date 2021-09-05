@@ -47,27 +47,12 @@ def main():
 
     while running:
         game_state = engine.GameState()  # Initialize new game_state for next game.
+
         # Single player script.
         if single_player == 's':
-            player_symbol = 'X'
-            while not game_complete:
-                draw_game_state(screen, game_state)
-                mouse = p.mouse.get_pos()
-                for e in p.event.get():
-                    if e.type == p.QUIT:
-                        running = False
-                    # If player chooses 'X'
-                    if e.type == p.MOUSEBUTTONDOWN:
-                        if player_symbol == 'X':
-                            game_won = game_state_mod(mouse, game_state)
-                            if game_won:
-                                draw_game_state(screen, game_state)  # Update game_state once more.
-                                game_complete = True
+            player_move = True
+            computer_move = False
 
-                p.display.update()
-
-        # Two player script.
-        elif single_player == 't':
             while not game_complete:
                 draw_game_state(screen, game_state)
                 mouse = p.mouse.get_pos()
@@ -75,20 +60,50 @@ def main():
                 for e in p.event.get():
                     if e.type == p.QUIT:
                         running = False
+
+                    # Computer move:
+                    if computer_move:
+                        time.sleep(.5)
+                        comp_move = game_state.rand_move('O')
+                        game_state.board[comp_move[0]][comp_move[1]] = 'O'
+                        if game_state.check_win('O'):
+                            draw_game_state(screen, game_state)
+                            game_complete = True
+                        computer_move = False
+
+                    # Human move:
                     if e.type == p.MOUSEBUTTONDOWN:
-                        game_won = game_state_mod(mouse, game_state)
+                        game_won = game_state_mod(mouse, game_state, play_mode=0)
+                        computer_move = True
                         if game_won:
                             draw_game_state(screen, game_state)  # Update game_state once more before ending game loop.
                             game_complete = True
 
                 p.display.update()
 
-            # Prompt to play another game. Will be integrated as a button in Pygame eventually...
-            next_game = input("Play again? 'y' or 'n': ")
-            if next_game == 'y':
-                game_complete = False
-            else:
-                running = False
+        # Two player script.
+        if single_player == 't':
+            while not game_complete:
+                draw_game_state(screen, game_state)
+                mouse = p.mouse.get_pos()
+
+                for e in p.event.get():
+                    if e.type == p.QUIT:
+                        running = False
+                    if e.type == p.MOUSEBUTTONDOWN:
+                        game_won = game_state_mod(mouse, game_state, play_mode=2)
+                        if game_won:
+                            draw_game_state(screen, game_state)  # Update game_state once more before ending game loop.
+                            game_complete = True
+
+                p.display.update()
+
+        # Prompt to play another game. Will be integrated as a button in Pygame eventually...
+        next_game = input("Play again? 'y' or 'n': ")
+        if next_game == 'y':
+            game_complete = False
+        else:
+            running = False
 
 
 # Function that draws current game state to pygame screen.
@@ -106,48 +121,52 @@ def draw_game_state(screen, game_state):
 
 
 # Function that takes user input, checks move legality, modifies the game_state and checks for winning conditions.
-def game_state_mod(mouse, game_state):
+def game_state_mod(mouse, game_state, play_mode):
 
-    # Check game_state object for player turn.
+    # Check game_state object for player turn and skip second player turn using play_mode arg if in single player.
     if game_state.x_to_play:
-        symbol = 'X'
-        game_state.x_to_play = False
+        if play_mode == 0:
+            symbol = 'X'
+        else:
+            symbol = 'X'
+            game_state.x_to_play = False
+
     else:
-        symbol = 'O'
-        game_state.x_to_play = True
-    move = []
+        if play_mode == 1:
+            symbol = 'O'
+            game_state.x_to_play = False
+        else:
+            symbol = 'O'
+            game_state.x_to_play = True
 
     # Find x_position.
-    if mouse[0] < GAME_WIDTH / 3:
+    if mouse[1] < GAME_WIDTH / 3:
         x_pos = 0
-    elif mouse[0] < GAME_WIDTH / 3 * 2:
+    elif mouse[1] < GAME_WIDTH / 3 * 2:
         x_pos = 1
-    elif mouse[0] < GAME_WIDTH:
+    elif mouse[1] < GAME_WIDTH:
         x_pos = 2
     else:
         x_pos = None
 
     # Find y_position.
-    if mouse[1] < GAME_HEIGHT / 3:
+    if mouse[0] < GAME_HEIGHT / 3:
         y_pos = 0
-    elif mouse[1] < GAME_HEIGHT / 3 * 2:
+    elif mouse[0] < GAME_HEIGHT / 3 * 2:
         y_pos = 1
-    elif mouse[1] < GAME_HEIGHT:
+    elif mouse[0] < GAME_HEIGHT:
         y_pos = 2
     else:
         y_pos = None
 
-    move = [y_pos, x_pos]
-    print(move)
+    move = [x_pos, y_pos]
     if game_state.legal(move):
-        game_state.board[y_pos][x_pos] = symbol
-        print(game_state.board)
+        game_state.board[x_pos][y_pos] = symbol
         if game_state.check_win(symbol=symbol):
             return True
 
     else:
         game_state.x_to_play = not game_state.x_to_play
-        print(game_state.x_to_play)
 
     return False
 

@@ -49,7 +49,8 @@ class GameState:
         else:
             return True
 
-    def rand_move(self):
+    # Function that generates random legal move and updates the game state for 'easy' mode.
+    def rand_move(self, comp_symbol):
         legal_move = False
         while not legal_move:
             comp_move = [random.randint(0, 2), random.randint(0, 2)]
