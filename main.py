@@ -50,8 +50,18 @@ def main():
 
         # Single player script.
         if single_player == 's':
-            player_move = True
-            computer_move = False
+
+            # Player selects 'character' -> Will be added as a pygame button soon!
+            # play_mode variable = 0: single player as X. val = 1: single player as O. val = 2: two player.
+            x_or_o = input("Choose 'X' or 'O': ")
+            if x_or_o == 'X':
+                play_mode = 0
+                computer_move = False
+                computer_symbol = 'O'
+            else:
+                play_mode = 1
+                computer_symbol = 'X'
+                computer_move = True
 
             while not game_complete:
                 draw_game_state(screen, game_state)
@@ -64,16 +74,16 @@ def main():
                     # Computer move:
                     if computer_move:
                         time.sleep(.5)
-                        comp_move = game_state.rand_move('O')
-                        game_state.board[comp_move[0]][comp_move[1]] = 'O'
-                        if game_state.check_win('O'):
+                        comp_move = game_state.rand_move(computer_symbol)
+                        game_state.board[comp_move[0]][comp_move[1]] = computer_symbol
+                        if game_state.check_win(computer_symbol):
                             draw_game_state(screen, game_state)
                             game_complete = True
                         computer_move = False
 
                     # Human move:
                     if e.type == p.MOUSEBUTTONDOWN:
-                        game_won = game_state_mod(mouse, game_state, play_mode=0)
+                        game_won = game_state_mod(mouse, game_state, play_mode)
                         computer_move = True
                         if game_won:
                             draw_game_state(screen, game_state)  # Update game_state once more before ending game loop.
@@ -124,16 +134,15 @@ def draw_game_state(screen, game_state):
 def game_state_mod(mouse, game_state, play_mode):
 
     # Check game_state object for player turn and skip second player turn using play_mode arg if in single player.
-    if game_state.x_to_play:
-        if play_mode == 0:
-            symbol = 'X'
-        else:
-            symbol = 'X'
-            game_state.x_to_play = False
+    if play_mode == 0:
+        symbol = 'X'
+
+    elif play_mode == 1:
+        symbol = 'O'
 
     else:
-        if play_mode == 1:
-            symbol = 'O'
+        if game_state.x_to_play:
+            symbol = 'X'
             game_state.x_to_play = False
         else:
             symbol = 'O'
