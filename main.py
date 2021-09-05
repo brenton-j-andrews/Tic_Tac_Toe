@@ -3,14 +3,14 @@ The main file will be our program driver.
 It will handle user / computer input and update command line output / pygame graphics.
 """
 
-# Test 'new' branch...
-
 import pygame as p
 import engine
 import time
 
 # Initialize PyGame engine.
 p.init()
+
+print("lets see if this works out...")
 
 # Board Dimension / Info Variables.
 GAME_WIDTH = GAME_HEIGHT = 600
