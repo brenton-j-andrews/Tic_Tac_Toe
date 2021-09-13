@@ -40,8 +40,11 @@ def main():
     running = True
     game_complete = False  # game_won keeps track of current game status. running controls the entire script.
 
-    # Choose single or double player mode. Eventually integrate into Pycharm so that it can be changed each game.
+    # Choose single or double player mode. Eventually integrate into Pygame so that it can be changed each game.
     single_player = input("Single or two player? 's' or 't': ")
+
+    # Select difficulty -> Will be integrated as a button on Pygame eventually...
+    difficulty = input("'E or H: ")
 
     while running:
         game_state = engine.GameState()  # Initialize new game_state for next game.
@@ -56,10 +59,11 @@ def main():
                 play_mode = 0
                 computer_move = False
                 computer_symbol = 'O'
+
             else:
                 play_mode = 1
-                computer_symbol = 'X'
                 computer_move = True
+                computer_symbol = 'X'
 
             while not game_complete:
                 draw_game_state(screen, game_state)
@@ -75,7 +79,7 @@ def main():
                     # Computer move:
                     if computer_move:
                         time.sleep(.5)
-                        comp_move = game_state.rand_move()
+                        comp_move = game_state.move_generator(difficulty=difficulty, computer_symbol=computer_symbol)
                         game_state.board[comp_move[0]][comp_move[1]] = computer_symbol
                         if game_state.check_win(computer_symbol):
                             draw_game_state(screen, game_state)
