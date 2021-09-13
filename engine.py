@@ -1,7 +1,7 @@
 """
-This class stores all information concerning the current game state, such as the board layout and whose
-turn it is. It will also check if winning conditions are present after each turn, check move legality and
-provide a random move generator for single player testing / 'EASY' Mode.
+This class stores all information concerning the current game state, including the board state and whose
+turn it is. It will also check if winning conditions are present after each turn, check move legality, compute random
+moves for an 'EASY' single player mode and run a MINIMAX algorithm for the 'HARD' single player mode.
 """
 
 import random
@@ -18,7 +18,7 @@ class GameState:
         ]
         self.x_to_play = True
 
-    # Function checks the current game state for winning conditions.
+    # Method that checks the current game state for winning conditions.
     def check_win(self, symbol):
         # Check columns.
         col_count = 0
@@ -42,18 +42,38 @@ class GameState:
 
         return False
 
-    # Function that checks move legality.
+    # Method that checks move legality.
     def legal(self, move):
         if self.board[move[0]][move[1]] != ' ':
             return False
         else:
             return True
 
-    # Function that generates random legal move and updates the game state for 'easy' mode.
-    def rand_move(self, comp_symbol):
+    # Method that checks that moves remain.
+    def moves_left(self):
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == ' ':
+                    return True
+        print("Its a draw!")
+        return False
+
+    # Method that generates random legal move and updates the game state for 'easy' mode.
+    def rand_move(self):
         legal_move = False
         while not legal_move:
             comp_move = [random.randint(0, 2), random.randint(0, 2)]
             if self.legal(comp_move):
                 return comp_move
 
+    # MINIMAX Algorithm implemented below:
+
+    # 1. Count number of remaining moves available. This dictates Minimax depth.
+    def count_moves(self):
+        count = 0
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == ' ':
+                    count += 1
+
+        return count

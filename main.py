@@ -10,8 +10,6 @@ import time
 # Initialize PyGame engine.
 p.init()
 
-print("lets see if this works out...")
-
 # Board Dimension / Info Variables.
 GAME_WIDTH = GAME_HEIGHT = 600
 DIMENSION = 3  # 3 x 3 squares in tic tac toe.
@@ -28,7 +26,7 @@ PIECE_LOC = [
     [(100, 500), (300, 500), (500, 500)]]
 
 
-# Button Constants.
+# Button Constants. Will be updated when mode / difficulty / symbol and quit buttons are added to the interface.
 light_color = (200, 200, 200)
 dark_color = (100, 100, 100)
 choose_symbol = p.font.SysFont('Arial', 80)
@@ -66,6 +64,9 @@ def main():
             while not game_complete:
                 draw_game_state(screen, game_state)
                 mouse = p.mouse.get_pos()
+                if not game_state.moves_left():
+                    game_complete = True
+                    break
 
                 for e in p.event.get():
                     if e.type == p.QUIT:
@@ -74,7 +75,7 @@ def main():
                     # Computer move:
                     if computer_move:
                         time.sleep(.5)
-                        comp_move = game_state.rand_move(computer_symbol)
+                        comp_move = game_state.rand_move()
                         game_state.board[comp_move[0]][comp_move[1]] = computer_symbol
                         if game_state.check_win(computer_symbol):
                             draw_game_state(screen, game_state)
@@ -96,6 +97,9 @@ def main():
             while not game_complete:
                 draw_game_state(screen, game_state)
                 mouse = p.mouse.get_pos()
+                if not game_state.moves_left():
+                    game_complete = True
+                    break
 
                 for e in p.event.get():
                     if e.type == p.QUIT:
