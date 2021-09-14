@@ -19,7 +19,6 @@ class GameState:
         ]
         self.x_to_play = True
 
-
     # Method that checks the current game state for winning conditions.
     def check_win(self, symbol):
         # Check columns.
