@@ -41,10 +41,12 @@ def main():
     game_complete = False  # game_won keeps track of current game status. running controls the entire script.
 
     # Choose single or double player mode. Eventually integrate into Pygame so that it can be changed each game.
-    single_player = input("Single or two player? 's' or 't': ")
+    # single_player = input("Single or two player? 's' or 't': ") -> TEMPORARY HARD CODE!!!
+    single_player = 's'
 
     # Select difficulty -> Will be integrated as a button on Pygame eventually...
-    difficulty = input("'E or H: ")
+    # difficulty = input("'E or H: ") -> TEMPORARY HARD CODE!!!
+    difficulty = 'H'
 
     while running:
         game_state = engine.GameState()  # Initialize new game_state for next game.
