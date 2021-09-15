@@ -65,13 +65,13 @@ def find_best_move(game_board, computer_symbol):
                 # 2nd arg: current depth, 3rd arg: max or min play.
                 move_value = minimax(game_board, 0, False, max_player, min_player)
                 print(move_value)
-
                 # Undo move [i][j].
                 game_board[i][j] = ' '
 
                 # Compare move_value and highest_value. If move_value is better update other values.
                 if move_value > highest_value:
                     highest_value = move_value
+                    print(highest_value)
                     best_move = [i, j]
 
     print(f"The best move right now is {best_move}.")
@@ -90,17 +90,20 @@ def moves_left(game_board):
 # Minimax function uses the evaluate_board function and recursion to see future game_states and make optimal moves.
 def minimax(game_board, depth, is_max, max_player, min_player):
     score = evaluate_board(game_board, max_player, min_player)
-
+    print(depth)
     # If computer winning conditions met, return 10
     if score == 10:
+        print('test')
         return score
 
     # If player winning conditions met:
     if score == -10:
+        print('test 1')
         return score
 
     # Check for remaining moves.
     if not moves_left(game_board):
+        print('test 2')
         return 0
 
     # If it is the maximizer turn:
@@ -140,12 +143,7 @@ def minimax(game_board, depth, is_max, max_player, min_player):
 
 
 # Boards for test input:
-boardx_1 = [['X', 'O', ' '], [' ', 'X', 'O'], [' ', ' ', ' ']]
-boardx_2 = [[' ', 'O', 'X'], [' ', 'X', 'O'], [' ', ' ', ' ']]
-boardx_3 = [['X', 'O', ' '], ['X', 'O', ' '], [' ', ' ', ' ']]
-boardx_4 = [[' ', ' ', ' '], ['X', ' ', ' '], ['X', ' ', 'O']]
-boardo_1 = [['O', 'X', ' '], [' ', 'O', 'X'], [' ', ' ', ' ']]
-boardo_2 = [[' ', 'X', 'O'], [' ', 'O', 'X'], [' ', ' ', ' ']]
-boardo_3 = [['O', 'X', ' '], ['O', 'X', ' '], [' ', ' ', ' ']]
+board_1 = [[' ', ' ', 'O'], ['X', 'X', 'O'], [' ', ' ', 'X']]
+board_2 = [[' ', ' ', 'O'], [' ', 'X', ' '], ['O', ' ', 'X']]
 
-print(find_best_move(boardx_4, 'O'))
+print(find_best_move(board_1, 'X'))
