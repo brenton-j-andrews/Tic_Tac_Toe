@@ -4,9 +4,7 @@
 # always win or draw the game.
 
 """
-Current issue with minimax:
-With computer as O, will often block x winning moves while an O winning move is present.
-Computer playing as X doesn't seem to have this issue.
+Test branch...
 """
 
 
