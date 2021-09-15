@@ -69,7 +69,6 @@ class GameState:
                     return comp_move
         else:
             comp_move = minimax.find_best_move(self.board, computer_symbol)
-            print(comp_move)
             return comp_move
 
 
