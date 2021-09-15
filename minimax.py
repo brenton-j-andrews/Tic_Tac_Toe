@@ -61,19 +61,15 @@ def find_best_move(game_board, computer_symbol):
 
                 # Pass move i, j into the minimax function for evaluation.
                 # 2nd arg: current depth, 3rd arg: max or min play.
-                print(f"Move: [{i},{j}]")
                 move_value = minimax(game_board, 0, False, max_player, min_player)
-                print(move_value)
                 # Undo move [i][j].
                 game_board[i][j] = ' '
 
                 # Compare move_value and highest_value. If move_value is better update other values.
                 if move_value > highest_value:
                     highest_value = move_value
-                    print(highest_value)
                     best_move = [i, j]
 
-    print(f"The best move right now is {best_move}.")
     return best_move
 
 
