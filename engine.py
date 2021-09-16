@@ -18,6 +18,7 @@ class GameState:
             [" ", " ", " "]
         ]
         self.x_to_play = True
+        self.test_mode = False
 
     # Method that checks the current game state for winning conditions.
     def check_win(self, symbol):
@@ -25,20 +26,23 @@ class GameState:
         col_count = 0
         for i in range(3):
             if self.board[i][col_count] == self.board[i][col_count + 1] == self.board[i][col_count + 2] == symbol:
-                print(f"\n{symbol} Wins! Congratulations!")
+                if not self.test_mode:
+                    print(f"\n{symbol} Wins! Congratulations!")
                 return True
 
         # Check rows.
         row_count = 0
         for j in range(3):
             if self.board[row_count][j] == self.board[row_count + 1][j] == self.board[row_count + 2][j] == symbol:
-                print(f"\n{symbol} Wins! Congratulations!")
+                if not self.test_mode:
+                    print(f"\n{symbol} Wins! Congratulations!")
                 return True
 
         # Check diagonal / anti-diagonal.
         if self.board[0][0] == self.board[1][1] == self.board[2][2] == symbol or self.board[2][0] == \
                 self.board[1][1] == self.board[0][2] == symbol:
-            print(f"\n{symbol} Wins! Congratulations!")
+            if not self.test_mode:
+                print(f"\n{symbol} Wins! Congratulations!")
             return True
 
         return False
@@ -56,7 +60,8 @@ class GameState:
             for j in range(3):
                 if self.board[i][j] == ' ':
                     return True
-        print("Its a draw!")
+        if not self.test_mode:
+            print("Its a draw!")
         return False
 
     # Method that generates random moves for 'easy ' mode and calls minimax function for 'hard' mode.
