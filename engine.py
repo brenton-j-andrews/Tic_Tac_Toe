@@ -20,6 +20,12 @@ class GameState:
         self.x_to_play = True
         self.test_mode = False
 
+        # Below variables determine initial button status. Can be changed before each game.
+        # self.difficult -> True means 'hard' mode, False means 'easy' mode.
+        self.single_player = True
+        self.is_x = True
+        self.difficult = True
+
     # Method that checks the current game state for winning conditions.
     def check_win(self, symbol):
         # Check columns.

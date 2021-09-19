@@ -11,13 +11,15 @@ import time
 p.init()
 
 # Board Dimension / Info Variables.
-GAME_WIDTH = GAME_HEIGHT = 600
+GAME_WIDTH = 800
+GAME_HEIGHT = 600
 DIMENSION = 3  # 3 x 3 squares in tic tac toe.
 SQ_SIZE = GAME_HEIGHT / DIMENSION
 # SQ_LOC has a color tuple and screen coordinates for each square printed to the pygame screen.
-SQ_LOC = [((240, 240, 240), 0, 0), ((200, 200, 200), 200, 0), ((240, 240, 240), 400, 0),
+SQ_LOC = [((240, 240, 240), 0, 0), ((200, 200, 200), 200, 0), ((240, 240, 240), 400, 0), ((128, 128, 128), 600, 0),
           ((200, 200, 200), 0, 200), ((240, 240, 240), 200, 200), ((200, 200, 200), 400, 200),
-          ((240, 240, 240), 0, 400), ((200, 200, 200), 200, 400), ((240, 240, 240), 400, 400)]
+          ((128, 128, 128), 600, 200), ((240, 240, 240), 0, 400), ((200, 200, 200), 200, 400),
+          ((240, 240, 240), 400, 400), ((128, 128, 128), 600, 400)]
 
 # Location tuples for 'X' and 'O' placement on the board.
 PIECE_LOC = [
@@ -32,6 +34,8 @@ dark_color = (100, 100, 100)
 choose_symbol = p.font.SysFont('Arial', 80)
 x_select = choose_symbol.render("X", False, (0, 0, 0))
 o_select = choose_symbol.render('O', False, (0, 0, 0))
+title_font = p.font.SysFont('cambria', 30)
+button_font = p.font.SysFont('cambria', 20)
 
 
 def main():
@@ -40,23 +44,46 @@ def main():
     running = True
     game_complete = False  # game_won keeps track of current game status. running controls the entire script.
 
-    # Choose single or double player mode. Eventually integrate into Pygame so that it can be changed each game.
-    # single_player = input("Single or two player? 's' or 't': ") -> TEMPORARY HARD CODE!!!
-    single_player = 's'
-
     # Select difficulty -> Will be integrated as a button on Pygame eventually...
     # difficulty = input("'E or H: ") -> TEMPORARY HARD CODE!!!
-    difficulty = 'H'
+    difficulty = ['H', 'E']
 
     while running:
         game_state = engine.GameState()  # Initialize new game_state for next game.
 
+        # Menu buttons will be active until first time game board is clicked.
+        game_start = False
+        while not game_start:
+            draw_game_state(screen, game_state)
+            for e in p.event.get():
+                mouse = p.mouse.get_pos()
+                if e.type == p.MOUSEBUTTONDOWN:
+                    # Single / two player buttons.
+                    if 690 >= mouse[0] >= 625 and 155 >= mouse[1] >= 90:
+                        game_state.single_player = True
+                    if 775 >= mouse[0] >= 710 and 155 >= mouse[1] >= 90:
+                        game_state.single_player = False
+                    # Difficulty level buttons.
+                    if 690 >= mouse[0] >= 625 and 245 >= mouse[1] >= 180:
+                        game_state.difficult = True
+                        difficulty = 'H'
+                    if 775 >= mouse[0] >= 710 and 245 >= mouse[1] >= 180:
+                        game_state.difficult = False
+                        difficulty = 'E'
+
+                    # Click board to start game.
+                    if mouse[0] < 600:
+                        game_start = True
+            p.display.update()
+
         # Single player script.
-        if single_player == 's':
+        if game_state.single_player:
 
             # Player selects 'character' -> Will be added as a pygame button soon!
             # play_mode variable = 0: single player as X. val = 1: single player as O. val = 2: two player.
-            x_or_o = input("Choose 'X' or 'O': ")
+            # x_or_o = input("Choose 'X' or 'O': ")
+            x_or_o = 'X'
+
             if x_or_o == 'X':
                 play_mode = 0
                 computer_move = False
@@ -90,16 +117,18 @@ def main():
 
                     # Human move:
                     if e.type == p.MOUSEBUTTONDOWN:
-                        game_won = game_state_mod(mouse, game_state, play_mode)
-                        computer_move = True
-                        if game_won:
-                            draw_game_state(screen, game_state)  # Update game_state once more before ending game loop.
-                            game_complete = True
+                        # Ignore button presses in the menu area for now, except quit...
+                        if mouse[0] < 600:
+                            game_won = game_state_mod(mouse, game_state, play_mode)
+                            computer_move = True
+                            if game_won:
+                                draw_game_state(screen, game_state)  # Update game_state once more before ending game loop.
+                                game_complete = True
 
                 p.display.update()
 
         # Two player script.
-        if single_player == 't':
+        if not game_state.single_player:
             while not game_complete:
                 draw_game_state(screen, game_state)
                 mouse = p.mouse.get_pos()
@@ -128,8 +157,36 @@ def main():
 
 # Function that draws current game state to pygame screen.
 def draw_game_state(screen, game_state):
-    for i in range(9):
+    for i in range(12):
         p.draw.rect(screen, SQ_LOC[i][0], [SQ_LOC[i][1], SQ_LOC[i][2], SQ_SIZE, SQ_SIZE])
+
+    # Render menu text / buttons.
+    title_text = title_font.render('Tic Tac Toe', False, (0, 0, 0))
+    screen.blit(title_text, (625, 25))
+
+    # Single / two player buttons. Single by default.
+    if game_state.single_player:
+        p.draw.rect(screen, (255, 255, 255), [625, 90, 65, 65])
+        p.draw.rect(screen, (170, 170, 170), [710, 90, 65, 65])
+    else:
+        p.draw.rect(screen, (170, 170, 170), [625, 90, 65, 65])
+        p.draw.rect(screen, (255, 255, 255), [710, 90, 65, 65])
+    single_font = button_font.render('Single', False, (0, 0, 0))
+    two_font = button_font.render('Two', False, (0, 0, 0))
+    screen.blit(single_font, (630, 110))
+    screen.blit(two_font, (720, 110))
+
+    # Easy / Hard mode buttons. Easy by default.
+    if game_state.difficult:
+        p.draw.rect(screen, (255, 255, 255), [625, 180, 65, 65])
+        p.draw.rect(screen, (170, 170, 170), [710, 180, 65, 65])
+    else:
+        p.draw.rect(screen, (170, 170, 170), [625, 180, 65, 65])
+        p.draw.rect(screen, (255, 255, 255), [710, 180, 65, 65])
+    hard_font = button_font.render('Hard', False, (0, 0, 0))
+    easy_font = button_font.render('Easy', False, (0, 0, 0))
+    screen.blit(hard_font, (635, 200))
+    screen.blit(easy_font, (720, 200))
 
     # Render x and o symbols from game state.
     for i in range(3):
@@ -159,11 +216,11 @@ def game_state_mod(mouse, game_state, play_mode):
             game_state.x_to_play = True
 
     # Find x_position.
-    if mouse[1] < GAME_WIDTH / 3:
+    if mouse[1] < (GAME_WIDTH - 200) / 3:
         x_pos = 0
-    elif mouse[1] < GAME_WIDTH / 3 * 2:
+    elif mouse[1] < (GAME_WIDTH - 200) / 3 * 2:
         x_pos = 1
-    elif mouse[1] < GAME_WIDTH:
+    elif mouse[1] < (GAME_WIDTH - 200):
         x_pos = 2
     else:
         x_pos = None
