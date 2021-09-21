@@ -31,7 +31,7 @@ PIECE_LOC = [
 # Button Constants. Will be updated when mode / difficulty / symbol and quit buttons are added to the interface.
 light_color = (200, 200, 200)
 dark_color = (100, 100, 100)
-choose_symbol = p.font.SysFont('Arial', 80)
+choose_symbol = p.font.SysFont('Arial', 60)
 x_select = choose_symbol.render("X", False, (0, 0, 0))
 o_select = choose_symbol.render('O', False, (0, 0, 0))
 title_font = p.font.SysFont('cambria', 30)
@@ -47,9 +47,10 @@ def main():
     # Select difficulty -> Will be integrated as a button on Pygame eventually...
     # difficulty = input("'E or H: ") -> TEMPORARY HARD CODE!!!
     difficulty = ['H', 'E']
+    game_state = engine.GameState()  # Initialize new game_state for next game.
 
     while running:
-        game_state = engine.GameState()  # Initialize new game_state for next game.
+        game_state.board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]  # Reset game board, keep button info.
 
         # Menu buttons will be active until first time game board is clicked.
         game_start = False
@@ -70,7 +71,11 @@ def main():
                     if 775 >= mouse[0] >= 710 and 245 >= mouse[1] >= 180:
                         game_state.difficult = False
                         difficulty = 'E'
-
+                    # 'X' or 'O' single player button.
+                    if 695 >= mouse[0] >= 625 and 335 >= mouse[1] >= 270:
+                        game_state.is_x = True
+                    if 775 >= mouse[0] >= 710 and 335 >= mouse[1] >= 270:
+                        game_state.is_x = False
                     # Click board to start game.
                     if mouse[0] < 600:
                         game_start = True
@@ -79,12 +84,8 @@ def main():
         # Single player script.
         if game_state.single_player:
 
-            # Player selects 'character' -> Will be added as a pygame button soon!
             # play_mode variable = 0: single player as X. val = 1: single player as O. val = 2: two player.
-            # x_or_o = input("Choose 'X' or 'O': ")
-            x_or_o = 'X'
-
-            if x_or_o == 'X':
+            if game_state.is_x:
                 play_mode = 0
                 computer_move = False
                 computer_symbol = 'O'
@@ -187,6 +188,16 @@ def draw_game_state(screen, game_state):
     easy_font = button_font.render('Easy', False, (0, 0, 0))
     screen.blit(hard_font, (635, 200))
     screen.blit(easy_font, (720, 200))
+
+    # Choose X or O for single player buttons.
+    if game_state.is_x:
+        p.draw.rect(screen, (255, 255, 255), [625, 270, 65, 65])
+        p.draw.rect(screen, (170, 170, 170), [710, 270, 65, 65])
+    else:
+        p.draw.rect(screen, (170, 170, 170), [625, 270, 65, 65])
+        p.draw.rect(screen, (255, 255, 255), [710, 270, 65, 65])
+    screen.blit(x_select, (642, 268))
+    screen.blit(o_select, (725, 268))
 
     # Render x and o symbols from game state.
     for i in range(3):
