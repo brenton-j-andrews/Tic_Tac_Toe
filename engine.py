@@ -18,13 +18,17 @@ class GameState:
             [" ", " ", " "]
         ]
         self.x_to_play = True
-        self.test_mode = False
+        self.game_complete = False  # Tracks if a single game is complete or not.
 
         # Below variables determine initial button status. Can be changed before each game.
-        # self.difficult -> True means 'hard' mode, False means 'easy' mode.
+        self.game_start = False  # Loop that allows for button input. Turns to True once game screen is clicked.
         self.single_player = True
         self.is_x = True
-        self.difficult = True
+        self.difficulty = "H"
+
+        # Set test_mode to True when running testing script.
+        self.test_mode = False
+        self.test_script = 0
 
     # Method that checks the current game state for winning conditions.
     def check_win(self, symbol):
@@ -71,13 +75,26 @@ class GameState:
         return False
 
     # Method that generates random moves for 'easy ' mode and calls minimax function for 'hard' mode.
-    def move_generator(self, difficulty, computer_symbol):
+    def move_generator(self, computer_symbol):
+        if self.difficulty == 'E':
+            legal_move = False
+            while not legal_move:
+                comp_move = [random.randint(0, 2), random.randint(0, 2)]
+                if self.legal(comp_move):
+                    return comp_move
+
+        if self.difficulty == "H":
+            comp_move = minimax.find_best_move(self.board, computer_symbol)
+            return comp_move
+
+    # Method for generating moves for testing script.
+    def test_move_generator(self, difficulty, computer_symbol):
         if difficulty == 'E':
             legal_move = False
             while not legal_move:
                 comp_move = [random.randint(0, 2), random.randint(0, 2)]
                 if self.legal(comp_move):
                     return comp_move
-        else:
+        if difficulty == "H":
             comp_move = minimax.find_best_move(self.board, computer_symbol)
             return comp_move
